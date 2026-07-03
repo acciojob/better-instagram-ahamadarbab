@@ -1,30 +1,38 @@
-//your code here
-const images = document.querySelectorAll(".image");
+const draggables = document.querySelectorAll("img");
+const containers = document.querySelectorAll(".flex > div");
 
-let draggedItem = null;
+let dragged = null;
 
-images.forEach((image) => {
-	image.addEventListener("dragstart", () => {
-		draggedItem = this;
+draggables.forEach((img) => {
+
+	img.addEventListener("dragstart", () => {
+		dragged = this;
 		this.classList.add("selected");
 	});
 
-	image.addEventListener("dragend", () => {
+	img.addEventListener("dragend", () => {
 		this.classList.remove("selected");
 	});
-
-	image.addEventListener("dragover", (e) => {
-		e.preventDefault();
-	});
-
-	image.addEventListener("drop", (e) => {
-		e.preventDefault();
-
-		if(draggedItem === this) return;
-
-		// Swap IDs so background images are swapped
-		const tempId = draggedItem.id;
-		draggedItem.id = this.id;
-		this.id = tempId;
-	});
+	
 });
+
+containers.forEach((container) => {
+	
+	container.addEventListener("dragover", (e) => {
+		e.preventDefault();
+	});
+
+	container.addEventListener("drop", (e) => {
+		e.preventDefault();
+
+		const target = this.querySelector("img");
+
+		if(!dragged || target === dragged) return;
+
+		const draggedParent = dragged.parentNode;
+		const targetParent = target.parentNode;
+
+		draggedParent.appendChild(target);
+		targetParent.appendChild(dragged);
+	})
+})
